@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <actor id="1" birthdate="1955-03-19 00:00:00.0" credit="Demi Moore" firstname="Bruce" lastname="Willis" nickname="Bruno"/>
+  <biography id="1" text="Actor and musician Bruce Willis is well known for his film appearances as wisecracking or hard-edged characters, often in spectacular action films. Collectively, he has appeared in films that have grossed in excess of $2.5 billion USD placing him in the top ten stars in terms of box office receipts. Walter Bruce Willis was born on March 19, 1955 in West Germany to parents living on a United States military base, and raised in Penns Grove, New Jersey. Willis picked up an interest for the dramatic arts in high school, and was allegedly &quot;discovered&quot; whilst working in a caf&#233; in New York City and then appeared in a couple of off-Broadway productions. While bartending one night, he was seen by a casting director who liked his personality and needed a bartender for a small movie role." actor_id="1"/>
+  <movie id="1" rating="8.3" title="Die Hard" year="1998"/>
+  <moviecredits id="1" ranking="1" actor_id="1" movie_id="1"/>
+  <quote id="1" text="Harry Ellis: Hey babe, I negotiate million dollar deals for breakfast. I think I can handle this Eurotrash." movie_id="1"/>
+  <trivia id="1" text="Stated he will no longer be doing violent action or &quot;save-the-world&quot; movies. [2001]" actor_id="1"/>
+</dataset>

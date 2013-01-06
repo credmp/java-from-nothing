@@ -2,6 +2,12 @@ package org.credmp.fromnothing.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * The actor or actress plays some role in a Movie. 
  * 
@@ -9,13 +15,22 @@ import java.util.Date;
  * @see Movie
  * @see MovieCredits
  */
+@Entity
 public class Actor {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
+    @Column(nullable=false)
     private String firstName;
+    @Column(nullable=true)
     private String lastName;
+    @Column(nullable=true)
     private String nickName;
+    @Column
     private Date birthDate;
+    @Column
     private Date dateOfDeath;
+    @Column(nullable=true)
     private String credit;
             
     public long getId() {
@@ -90,5 +105,22 @@ public class Actor {
      */
     public void setCredit(String credit) {
         this.credit = credit;
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        
+        result.append(this.getClass().getName() + " Object {" + NEW_LINE);
+        result.append("firstName = " + "[" + firstName + "]" + NEW_LINE);
+        result.append("lastName = " + "[" + lastName + "]" + NEW_LINE);
+        result.append("nickName = " + "[" + nickName + "]" + NEW_LINE);
+        result.append("birthDate = " + "[" + birthDate + "]" + NEW_LINE);
+        result.append("dateOfDeath = " + "[" + dateOfDeath + "]" + NEW_LINE);
+        result.append("credit = " + "[" + credit + "]" + NEW_LINE);
+
+        result.append("}");
+        
+        return result.toString();
     }
 }

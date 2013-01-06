@@ -1,16 +1,29 @@
 package org.credmp.fromnothing.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * A Movie 
  *
  * @author Arjen Wiersma <core@credmp.org>
  * @see Actor
  */
+@Entity
 public class Movie {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
+    @Column(nullable=false)
     private Integer year;
+    @Column(nullable=false)
     private String title;
+    @Column
     private String subtitle;
+    @Column
     private Double rating;
     
     public long getId() {
