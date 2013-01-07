@@ -1,7 +1,6 @@
 package org.credmp.fromnothing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,6 +9,9 @@ import java.util.List;
 import org.credmp.dbunit.CleanInsertTestExecutionListener;
 import org.credmp.dbunit.DataSetLocation;
 import org.credmp.fromnothing.model.Actor;
+import org.credmp.fromnothing.model.Movie;
+import org.credmp.fromnothing.model.MovieCredits;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Before;
@@ -56,9 +58,12 @@ public class PersistenceTestIT {
     @Before
     public void resetSequences() {
         logger.info("Resetting sequences");
-        logger.info("Result of resetting sequnces: {}", 
-                    getSession().createSQLQuery("SELECT setval('actor_id_seq', (SELECT MAX(id) FROM actor))").list()
-                    );
+        try {
+            // Try to reset the PostgreSQL sequences, this will fail on mysql
+            getSession().createSQLQuery("SELECT setval('actor_id_seq', (SELECT MAX(id) FROM actor))").list();
+            getSession().createSQLQuery("SELECT setval('movie_id_seq', (SELECT MAX(id) FROM movie))").list();
+            getSession().createSQLQuery("SELECT setval('moviecredits_id_seq', (SELECT MAX(id) FROM moviecredits))").list();
+        } catch (Exception ex) {}
     }
 
     @Test
@@ -72,14 +77,46 @@ public class PersistenceTestIT {
             actor.setBirthDate(date1);
 
             getSession().save(actor);
+
+            Query query = getSession().createQuery("from Actor where nickname=:nickname");
+            query.setParameter("nickname", "Arnie");
+
+            Actor arnie = (Actor) query.uniqueResult();
+            assertEquals(2, arnie.getId());
+            arnie.setNickName("Big Guy");
+            getSession().save(arnie);
+
+            query.setParameter("nickname", "Big Guy");
+            Actor arnie2 = (Actor) query.uniqueResult();
+            assertEquals("Version should match", 1, arnie2.getVersion());
+
+            getSession().delete(actor);
+            Actor arnie3 = (Actor) query.uniqueResult();
+            assertEquals("Arnie should no longer exist!", null, arnie3);
+
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+            logger.error("Excption thrown: ", ex.getMessage());
             assertTrue(ex.getMessage(), false);
+            ex.printStackTrace();
         }
     }
 
     @Test
-    public void basicQuery() {
+    public void theMovieRelationship() {
+        List list = getSession().createQuery("from MovieCredits").list();
+        assertTrue(list.size() > 0);
+
+        for (Object o : list) {
+            MovieCredits mc = (MovieCredits) o;
+            Actor a = mc.getActor();
+            assertNotNull("Actor should be set", a);
+            Movie m = mc.getMovie();
+            assertNotNull("Movie should be set", m);
+        }
+    }
+
+    @Test
+    public void basicDBUnitDataSet() {
         List list = getSession().createQuery("from Actor where firstname=:firstname").setParameter("firstname", "Bruce").list();
         assertTrue(list.size() > 0);
         assertEquals("Bruno",((Actor)list.get(0)).getNickName()); 

@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 /**
  * A Biography is the life story of an {@link Actor}. 
@@ -22,7 +23,10 @@ public class Biography {
     private Actor actor;
     @Column(length=8000)
     private String text;
-    
+    @Version
+    @Column(columnDefinition="int8 not null default 0")
+    private long version;
+        
     public long getId() {
         return id;
     }
@@ -45,5 +49,19 @@ public class Biography {
     
     public void setText(String text) {
         this.text = text;
+    }
+
+    /**
+     * @return text
+     */
+    public long getVersion() {
+        return version;
+    }
+    
+    /**
+     * @param version
+     */
+    public void setVersion(long version) {
+        this.version = version;
     }
 }

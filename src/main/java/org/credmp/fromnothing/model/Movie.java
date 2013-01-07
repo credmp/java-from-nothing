@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  * A Movie 
@@ -25,6 +26,9 @@ public class Movie {
     private String subtitle;
     @Column
     private Double rating;
+    @Version
+    @Column(columnDefinition="int8 not null default 0")
+    private long version;
     
     public long getId() {
         return id;
@@ -64,5 +68,19 @@ public class Movie {
     
     public void setRating(Double rating) {
         this.rating = rating;
+    }
+
+    /**
+     * @return text
+     */
+    public long getVersion() {
+        return version;
+    }
+    
+    /**
+     * @param version
+     */
+    public void setVersion(long version) {
+        this.version = version;
     }
 }

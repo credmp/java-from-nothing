@@ -46,6 +46,9 @@
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
 
+  <bean id="dbUnitDataTypeFactory" class="org.dbunit.ext.postgresql.PostgresqlDataTypeFactory"/>
+  <!-- <bean id="dbUnitDataTypeFactory" class="org.dbunit.ext.mysql.MySqlDataTypeFactory"/> -->
+
   <!-- Transaction behavious based on annotations -->
   <tx:annotation-driven transaction-manager="transactionManager"/>
 

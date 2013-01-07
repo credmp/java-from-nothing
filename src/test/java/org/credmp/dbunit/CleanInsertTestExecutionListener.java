@@ -10,11 +10,14 @@ import org.dbunit.database.DatabaseDataSourceConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
+import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListener;
@@ -25,13 +28,16 @@ import org.springframework.util.StringUtils;
  *
  */
 public class CleanInsertTestExecutionListener implements TestExecutionListener {
-    private static final Logger LOG = LoggerFactory.getLogger(CleanInsertTestExecutionListener.class);
+    private final static Logger logger = LoggerFactory.getLogger(CleanInsertTestExecutionListener.class); 
+
 
     /* (non-Javadoc)
      * @see org.springframework.test.context.TestExecutionListener#beforeTestMethod(org.springframework.test.context.TestContext)
      */
     @Override
     public void beforeTestMethod(TestContext testContext) throws Exception {
+        DefaultDataTypeFactory typeFactory = testContext.getApplicationContext().getBean(DefaultDataTypeFactory.class);
+
         // trying to find the DbUnit dataset
         String dataSetResourcePath = null;
 
@@ -40,17 +46,17 @@ public class CleanInsertTestExecutionListener implements TestExecutionListener {
         if(dsLocation != null) {
             // found the annotation
             dataSetResourcePath = dsLocation.value();
-            LOG.info("annotated test, using data set: {}",dataSetResourcePath);
+            logger.info("annotated test, using data set: {}",dataSetResourcePath);
         } else {
             // no annotation, let's try with the name of the test
             String tempDsRes = testContext.getTestInstance().getClass().getName();
             tempDsRes = StringUtils.replace(tempDsRes, ".", "/");
             tempDsRes = "/"+tempDsRes+"-dataset.xml";
             if(getClass().getResourceAsStream(tempDsRes) != null) {
-                LOG.info("detected default dataset: {}",tempDsRes);
+                logger.info("detected default dataset: {}",tempDsRes);
                 dataSetResourcePath = tempDsRes;
             } else {
-                LOG.info("no default dataset");
+                logger.info("no default dataset");
             }
         }
 
@@ -65,12 +71,11 @@ public class CleanInsertTestExecutionListener implements TestExecutionListener {
                                                                           testContext.getApplicationContext().getBean(DataSource.class)
                                                                           );
             DatabaseConfig config = dbConn.getConfig();
-            // TODO: retrieve this setting from the application context in order to use other databases
-            // then PostgreSQL
-            config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
+
+            config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, typeFactory);
             DatabaseOperation.CLEAN_INSERT.execute(dbConn, replaceDataSet);
         } else {
-            LOG.info("{} does not have any data set, no data injection",testContext.getClass().getName());
+            logger.info("{} does not have any data set, no data injection",testContext.getClass().getName());
         }
 
     }

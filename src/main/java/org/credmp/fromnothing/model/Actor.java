@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  * The actor or actress plays some role in a Movie. 
@@ -32,7 +33,10 @@ public class Actor {
     private Date dateOfDeath;
     @Column(nullable=true)
     private String credit;
-            
+    @Version
+    @Column(columnDefinition="int8 not null default 0")
+    private long version;
+                
     public long getId() {
         return id;
     }
@@ -107,17 +111,33 @@ public class Actor {
         this.credit = credit;
     }
 
+    /**
+     * @return text
+     */
+    public long getVersion() {
+        return version;
+    }
+    
+    /**
+     * @param version
+     */
+    public void setVersion(long version) {
+        this.version = version;
+    }
+
     public String toString() {
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
         
         result.append(this.getClass().getName() + " Object {" + NEW_LINE);
+        result.append("id = " + "[" + id + "]" + NEW_LINE);
         result.append("firstName = " + "[" + firstName + "]" + NEW_LINE);
         result.append("lastName = " + "[" + lastName + "]" + NEW_LINE);
         result.append("nickName = " + "[" + nickName + "]" + NEW_LINE);
         result.append("birthDate = " + "[" + birthDate + "]" + NEW_LINE);
         result.append("dateOfDeath = " + "[" + dateOfDeath + "]" + NEW_LINE);
         result.append("credit = " + "[" + credit + "]" + NEW_LINE);
+        result.append("version = " + "[" + version + "]" + NEW_LINE);
 
         result.append("}");
         

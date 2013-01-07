@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 /**
  * A memorable moment from the movie
@@ -21,6 +22,9 @@ public class Quote {
     private Movie movie;
     @Column
     private String text;
+    @Version
+    @Column(columnDefinition="int8 not null default 0")
+    private long version;
     
     public String getText() {
         return text;
@@ -44,5 +48,19 @@ public class Quote {
     
     public void setId(long id) {
         this.id = id;
+    }
+
+    /**
+     * @return text
+     */
+    public long getVersion() {
+        return version;
+    }
+    
+    /**
+     * @param version
+     */
+    public void setVersion(long version) {
+        this.version = version;
     }
 }

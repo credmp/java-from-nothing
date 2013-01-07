@@ -59,11 +59,12 @@
       <version>${postgresql.version}</version>
     </dependency>
 
-    <!-- <dependency> -->
-    <!--   <groupId>mysql</groupId> -->
-    <!--   <artifactId>mysql-connector-java</artifactId> -->
-    <!--   <version>5.1.22</version> -->
-    <!-- </dependency> -->
+    <!-- Database access to MySQL -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.22</version>
+    </dependency>
 
     <!-- Spring framework -->
     <dependency>
