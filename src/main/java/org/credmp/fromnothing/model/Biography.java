@@ -24,7 +24,7 @@ public class Biography {
     @Column(length=8000)
     private String text;
     @Version
-    @Column(columnDefinition="int8 not null default 0")
+    @Column(columnDefinition="bigint not null default 0")
     private long version;
         
     public long getId() {

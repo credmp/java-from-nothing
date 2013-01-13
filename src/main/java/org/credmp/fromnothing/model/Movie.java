@@ -27,7 +27,7 @@ public class Movie {
     @Column
     private Double rating;
     @Version
-    @Column(columnDefinition="int8 not null default 0")
+    @Column(columnDefinition="bigint not null default 0")
     private long version;
     
     public long getId() {
